@@ -356,13 +356,17 @@
         const auth = getAuth(app);
         
         let profileImageBase64 = ""; let bgImageBase64 = ""; let currentEditingId = null; let adminPicBase64 = ""; 
+        let currentUserUid = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                currentUserUid = user.uid;
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'flex';
-                loadDashboardData(); loadAdminProfileData(user);
+                loadDashboardData(); 
+                loadAdminProfileData(user);
             } else {
+                currentUserUid = null;
                 document.getElementById('login-section').style.display = 'block';
                 document.getElementById('app-layout').style.display = 'none';
             }
@@ -380,7 +384,7 @@
             if(!email || password.length < 6) { alert("Masukkan email yang valid dan sandi minimal 6 karakter."); return; }
             btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Mendaftarkan...";
             createUserWithEmailAndPassword(auth, email, password)
-                .then(() => { alert('🎉 Selamat datang! Akun CHERRYLINK Anda berhasil dibuat.'); btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Daftar Akun Baru"; })
+                .then(() => { alert('🎉 Selamat datang! Akun CHERRYLINK Anda berhasil dibuat dengan dasbor baru yang kosong.'); btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Daftar Akun Baru"; })
                 .catch(() => { alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.'); btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Daftar Akun Baru"; });
         });
 
@@ -396,11 +400,12 @@
         };
 
         window.openLivePreview = () => {
+            if (!currentUserUid) return;
             let baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/';
             if (currentEditingId) {
                 window.open(baseUrl + 'index.html?u=' + currentEditingId, '_blank');
             } else {
-                const dbPagesRef = ref(db, 'pages');
+                const dbPagesRef = ref(db, 'users/' + currentUserUid + '/pages');
                 onValue(dbPagesRef, (snapshot) => {
                     const pages = snapshot.val();
                     if (pages) {
@@ -414,7 +419,8 @@
         };
 
         function loadDashboardData() {
-            onValue(ref(db, 'pages'), (snapshot) => {
+            if (!currentUserUid) return;
+            onValue(ref(db, 'users/' + currentUserUid + '/pages'), (snapshot) => {
                 const pages = snapshot.val();
                 const container = document.getElementById('projects-container');
                 container.innerHTML = '';
@@ -477,9 +483,15 @@
             switchView('editor');
         };
 
-        window.deleteProject = (pageId) => { if(confirm(`Hapus permanen halaman "${pageId}"? Data tidak bisa dikembalikan.`)) remove(ref(db, 'pages/' + pageId)); };
+        window.deleteProject = (pageId) => {
+            if (!currentUserUid) return;
+            if(confirm(`Hapus permanen halaman "${pageId}"? Data tidak bisa dikembalikan.`)) {
+                remove(ref(db, 'users/' + currentUserUid + '/pages/' + pageId));
+            }
+        };
 
         window.openEditor = (pageId) => {
+            if (!currentUserUid) return;
             currentEditingId = pageId; 
             const pageIdInput = document.getElementById('input-pageid');
             pageIdInput.value = pageId;
@@ -489,7 +501,7 @@
             document.getElementById('preview-pic').style.display = 'none'; document.getElementById('preview-bg').style.display = 'none';
             document.getElementById('links-container').innerHTML = ''; switchView('editor');
 
-            onValue(ref(db, 'pages/' + pageId), (snapshot) => {
+            onValue(ref(db, 'users/' + currentUserUid + '/pages/' + pageId), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     document.getElementById('input-name').value = data.nama || ''; 
@@ -504,6 +516,7 @@
         };
 
         document.getElementById('btnSave').addEventListener('click', () => {
+            if (!currentUserUid) return;
             let pageIdToSave = currentEditingId;
             
             if (!pageIdToSave) {
@@ -535,7 +548,7 @@
                 links: linksArray
             };
 
-            set(ref(db, 'pages/' + pageIdToSave), newData).then(() => { 
+            set(ref(db, 'users/' + currentUserUid + '/pages/' + pageIdToSave), newData).then(() => { 
                 alert('Berhasil Disimpan!'); 
                 btn.innerHTML = originalHTML; 
                 currentEditingId = pageIdToSave;
@@ -560,19 +573,26 @@
         };
 
         function loadAdminProfileData(user) {
+            if (!currentUserUid) return;
             document.getElementById('admin-new-email').value = user.email; 
-            onValue(ref(db, 'admin_profile'), (snapshot) => {
+            onValue(ref(db, 'users/' + currentUserUid + '/admin_profile'), (snapshot) => {
                 const data = snapshot.val();
-                if (data) { document.getElementById('admin-name').value = data.nama || ''; if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; } }
+                if (data) { 
+                    document.getElementById('admin-name').value = data.nama || ''; 
+                    if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; } 
+                } else {
+                    document.getElementById('admin-name').value = "";
+                }
             }, { onlyOnce: true });
         }
 
         document.getElementById('btnSaveProfile').addEventListener('click', async () => {
+            if (!currentUserUid) return;
             const btn = document.getElementById('btnSaveProfile'); const oldPassword = document.getElementById('admin-old-password').value; const newEmail = document.getElementById('admin-new-email').value; const newPassword = document.getElementById('admin-new-password').value; const adminName = document.getElementById('admin-name').value; const user = auth.currentUser;
             const originalHTML = btn.innerHTML;
             btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z'/></svg></span> Memproses...";
             try {
-                await set(ref(db, 'admin_profile'), { nama: adminName, foto: adminPicBase64 });
+                await set(ref(db, 'users/' + currentUserUid + '/admin_profile'), { nama: adminName, foto: adminPicBase64 });
                 if (newEmail !== user.email || newPassword !== "") {
                     if (!oldPassword) { alert("Harap masukkan Kata Sandi Saat Ini (Lama) untuk otorisasi!"); btn.innerHTML = originalHTML; return; }
                     await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, oldPassword));
