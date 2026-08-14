@@ -339,7 +339,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -358,11 +358,24 @@
         let profileImageBase64 = ""; let bgImageBase64 = ""; let currentEditingId = null; let adminPicBase64 = ""; 
         let currentUserUid = null;
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUserUid = user.uid;
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'flex';
+                
+                // SKrip Migrasi Otomatis untuk Akun Kamu: 
+                // Jika folder privat user masih kosong tapi ada data lama di root /pages, tarik ke akun ini secara otomatis!
+                const userPagesRef = ref(db, 'users/' + currentUserUid + '/pages');
+                const userSnapshot = await get(userPagesRef);
+                if (!userSnapshot.exists()) {
+                    const globalPagesRef = ref(db, 'pages');
+                    const globalSnapshot = await get(globalPagesRef);
+                    if (globalSnapshot.exists()) {
+                        await set(userPagesRef, globalSnapshot.val());
+                    }
+                }
+
                 loadDashboardData(); 
                 loadAdminProfileData(user);
             } else {
@@ -577,12 +590,7 @@
             document.getElementById('admin-new-email').value = user.email; 
             onValue(ref(db, 'users/' + currentUserUid + '/admin_profile'), (snapshot) => {
                 const data = snapshot.val();
-                if (data) { 
-                    document.getElementById('admin-name').value = data.nama || ''; 
-                    if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; } 
-                } else {
-                    document.getElementById('admin-name').value = "";
-                }
+                if (data) { document.getElementById('admin-name').value = data.nama || ''; if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; } }
             }, { onlyOnce: true });
         }
 
