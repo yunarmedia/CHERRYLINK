@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHERRLINK Admin SaaS</title>
+    <title>CHERRLINK - Dashboard Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,60 +12,69 @@
             --text-main: #1f2937; --text-muted: #6b7280;
             --border: rgba(0,0,0,0.1); --danger: #ef4444; --success: #10b981;
         }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); overflow: hidden; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); overflow: hidden; background-color: #111; }
         
         #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: -1; }
 
         /* FORM LOGIN & DAFTAR */
-        #login-section { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); padding: 40px; border-radius: 24px; text-align: center; width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); z-index: 10; }
+        #login-section { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); padding: 40px; border-radius: 24px; text-align: center; width: 90%; max-width: 380px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 10; }
         
+        /* LAYOUT DASHBOARD UTAMA */
         #app-layout { display: none; width: 100vw; height: 100vh; display: flex; z-index: 1; position: relative; }
-        .sidebar { width: 260px; background: var(--sidebar-bg); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.5); display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
-        .sidebar-header { padding: 30px 20px; font-size: 22px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
-        .nav-menu { list-style: none; padding: 20px 10px; margin: 0; flex: 1; }
+        
+        /* DESKTOP SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.5); display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.05); transition: 0.3s; z-index: 50; }
+        .sidebar-header { padding: 30px 20px; font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); letter-spacing: -0.5px; }
+        .nav-menu { list-style: none; padding: 20px 10px; margin: 0; flex: 1; display: flex; flex-direction: column; }
         .nav-menu li { padding: 15px 20px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-main); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
         .nav-menu li:hover { background: #fff1f2; color: var(--primary); transform: translateX(5px); }
         .nav-menu li.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; }
+        .nav-menu li span.icon { font-size: 18px; }
+        .nav-text { display: block; }
         
-        .main-content { flex: 1; overflow-y: auto; padding: 40px; }
-        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        /* AREA KONTEN UTAMA */
+        .main-content { flex: 1; overflow-y: auto; padding: 40px; position: relative; }
+        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
         
         .view-container { display: none; } .view-container.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* KARTU PROYEK (DASHBOARD) */
         .header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .grid-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .project-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.8); transition: 0.3s; }
+        .grid-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 30px; }
+        .project-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.8); transition: 0.3s; display: flex; flex-direction: column; }
         .project-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-color: var(--primary); }
         .project-card h3 { margin: 0 0 5px; color: var(--primary); font-size: 20px; }
-        .project-card p { margin: 0 0 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-        .action-btns { display: flex; gap: 10px; }
+        .project-card p { margin: 0 0 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5; flex: 1; }
+        .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
         
-        .editor-container, .profile-container { background: var(--card-bg); border-radius: 24px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); }
+        .editor-container, .profile-container { background: var(--card-bg); border-radius: 24px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); margin-bottom: 40px; }
         
+        /* FORM INPUT GLOBAL */
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #374151; }
         input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 14px; border: 1.5px solid var(--border); border-radius: 12px; box-sizing: border-box; background: rgba(255, 255, 255, 0.9); font-family: inherit; font-size: 14px; transition: 0.3s; }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(144, 12, 63, 0.1); }
         .alert-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #ffeeba; text-align: left;}
 
-        .btn { padding: 12px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 14px; transition: 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; }
+        /* BUTTONS */
+        .btn { padding: 12px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 13px; transition: 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; font-size: 14px;}
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144, 12, 63, 0.4); }
-        
         .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); width: 100%; margin-top: 10px; }
         .btn-outline:hover { background: #fff1f2; }
         
-        .btn-edit { background: #e0f2fe; color: #0284c7; flex: 1; }
-        .btn-copy { background: #eef2ff; color: #4f46e5; flex: 1; }
+        .btn-edit { background: #e0f2fe; color: #0284c7; flex: 1; min-width: 45%; }
+        .btn-copy { background: #eef2ff; color: #4f46e5; flex: 1; min-width: 45%; }
         .btn-danger { background: #fee2e2; color: #ef4444; }
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 100%; padding: 16px; font-size: 16px; margin-top: 20px; }
         .btn-back { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px); margin-bottom: 20px; }
 
+        /* KISI (GRID) & UPLOAD */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .file-upload-wrapper { display: flex; align-items: center; gap: 16px; }
-        .file-upload-btn { position: relative; overflow: hidden; background: #fff1f2; border: 1.5px dashed var(--primary); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
+        .file-upload-btn { position: relative; overflow: hidden; background: #fff1f2; border: 1.5px dashed var(--primary); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
         .file-upload-btn input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; width: 100%; }
         .preview-img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; display: none; border: 2px solid var(--border); }
         .preview-img.avatar { border-radius: 50%; width: 80px; height: 80px; }
@@ -73,8 +82,38 @@
         .link-item-card { background: rgba(255, 255, 255, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: 0.3s; }
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 30px 0; }
 
+        /* ========================================= */
+        /* RESPONSIVE KHUSUS MOBILE (Aplikasi HP)    */
+        /* ========================================= */
         @media (max-width: 768px) {
-            #app-layout { flex-direction: column; } .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 15px; } .sidebar-header { display: none; } .nav-menu { display: flex; gap: 10px; padding: 0; } .nav-menu li span { display: none; } .grid-2 { grid-template-columns: 1fr; }
+            #login-section { padding: 30px 20px; }
+            
+            #app-layout { flex-direction: column; }
+            .header-main { flex-direction: column; text-align: center; gap: 15px; }
+            .main-content { padding: 20px 15px 90px; } /* Padding bawah agar tidak tertutup nav bar */
+            
+            /* Mengubah Sidebar menjadi Bottom App Navigation */
+            .sidebar { 
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; 
+                flex-direction: row; justify-content: space-around; align-items: center; 
+                border-right: none; border-top: 1px solid rgba(255,255,255,0.4); 
+                padding: 0; background: rgba(255,255,255,0.95);
+            }
+            .sidebar-header { display: none; } /* Hilangkan teks header di HP */
+            
+            .nav-menu { 
+                display: flex; flex-direction: row; width: 100%; justify-content: space-around; 
+                padding: 0 10px; margin: 0; align-items: center; 
+            }
+            .nav-menu li { 
+                flex-direction: column; gap: 4px; padding: 8px 5px; margin: 0; 
+                border-radius: 10px; flex: 1; text-align: center; font-size: 11px; font-weight: 700;
+            }
+            .nav-menu li:hover { transform: translateY(-2px); }
+            
+            .grid-2 { grid-template-columns: 1fr; } /* Grid form menjadi 1 kolom menyusun kebawah */
+            .editor-container, .profile-container { padding: 20px; border-radius: 16px; }
+            .link-item-card { padding: 15px; }
         }
     </style>
 </head>
@@ -82,60 +121,63 @@
     <video autoplay muted loop playsinline id="bg-video"><source src="https://files.catbox.moe/jnye24.mp4" type="video/mp4"></video>
     <div class="video-overlay"></div>
 
-    <!-- 1. VIEW: FORM LOGIN & DAFTAR -->
     <div id="login-section">
-        <div style="font-size: 40px; margin-bottom: 10px;">🍒</div>
-        <h2 style="color: var(--primary); margin: 0 0 5px;">CHERRLINK</h2>
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px;">SaaS Link-in-Bio Builder</p>
+        <div style="font-size: 45px; margin-bottom: 5px;">🍒</div>
+        <h2 style="color: var(--primary); margin: 0 0 5px; font-weight: 800; letter-spacing: -1px; font-size: 26px;">CHERRLINK</h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px; font-weight: 500;">Pusat Pengaturan Profil Anda</p>
         
         <div class="form-group">
-            <label>Alamat Email</label>
-            <input type="email" id="email" placeholder="nama@email.com">
+            <input type="email" id="email" placeholder="Alamat Email (nama@email.com)">
         </div>
         <div class="form-group">
-            <label>Kata Sandi</label>
-            <input type="password" id="password" placeholder="Minimal 6 karakter">
+            <input type="password" id="password" placeholder="Kata Sandi (Min. 6 Karakter)">
         </div>
         
-        <!-- Tombol Login dan Daftar -->
         <button class="btn btn-primary" id="btnLogin">Masuk Dasbor →</button>
         <button class="btn btn-outline" id="btnRegister">✨ Daftar Akun Baru</button>
     </div>
 
-    <!-- 2. VIEW: APLIKASI UTAMA (DASHBOARD SAAS) -->
     <div id="app-layout">
+        
         <aside class="sidebar">
             <div class="sidebar-header">🍒 CHERRLINK</div>
             <ul class="nav-menu">
-                <li id="nav-dashboard" class="active" onclick="switchView('dashboard')">🗂️ <span>Proyek Saya</span></li>
-                <li onclick="createNewProject()">✨ <span>Buat Web Baru</span></li>
-                <li id="nav-profile" onclick="switchView('profile')">👤 <span>Profil Akun</span></li>
-                <li style="margin-top: auto; color: var(--danger);" onclick="logoutApp()">🚪 <span>Keluar</span></li>
+                <li id="nav-dashboard" class="active" onclick="switchView('dashboard')">
+                    <span class="icon">🗂️</span> <span class="nav-text">Proyek Saya</span>
+                </li>
+                <li onclick="createNewProject()">
+                    <span class="icon">✨</span> <span class="nav-text">Buat Web Baru</span>
+                </li>
+                <li id="nav-profile" onclick="switchView('profile')">
+                    <span class="icon">👤</span> <span class="nav-text">Profil Akun</span>
+                </li>
+                <li style="color: var(--danger);" onclick="logoutApp()">
+                    <span class="icon">🚪</span> <span class="nav-text">Keluar</span>
+                </li>
             </ul>
         </aside>
 
         <main class="main-content">
-            <!-- LAYAR 1: DASHBOARD -->
+            
             <div id="view-dashboard" class="view-container active">
                 <div class="header-main">
                     <div>
                         <h1 style="margin: 0;">Selamat Datang! 👋</h1>
-                        <p style="margin: 5px 0 0; opacity: 0.8;">Kelola halaman publikmu di sini.</p>
+                        <p style="margin: 5px 0 0; opacity: 0.9;">Kelola halaman publik CHERRLINK Anda.</p>
                     </div>
                     <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="createNewProject()">➕ Buat Web Link</button>
                 </div>
                 <div class="grid-projects" id="projects-container"></div>
             </div>
 
-            <!-- LAYAR 2: EDITOR PROYEK -->
             <div id="view-editor" class="view-container">
                 <button class="btn btn-back" onclick="switchView('dashboard')">⬅️ Kembali ke Dasbor</button>
                 <div class="editor-container">
-                    <h2 style="margin-top: 0; color: var(--primary);">🎨 Edit Desain: <span id="editing-id" style="color: #6b7280;"></span></h2>
+                    <h2 style="margin-top: 0; color: var(--primary);">🎨 Desain Tampilan: <span id="editing-id" style="color: #6b7280; font-size: 16px;"></span></h2>
                     <div class="grid-2">
                         <div>
-                            <div class="form-group"><label>Nama Web Link</label><input type="text" id="input-name" placeholder="Misal: Profil Utama"></div>
-                            <div class="form-group"><label>Deskripsi Singkat (Bio)</label><textarea id="input-bio" rows="4"></textarea></div>
+                            <div class="form-group"><label>Judul Profil / Nama Brand</label><input type="text" id="input-name" placeholder="Misal: Toko Baju Arini"></div>
+                            <div class="form-group"><label>Deskripsi Singkat (Bio)</label><textarea id="input-bio" rows="4" placeholder="Tuliskan sesuatu tentang halaman ini..."></textarea></div>
                         </div>
                         <div>
                             <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn">📸 Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
@@ -145,17 +187,16 @@
                     <hr>
                     <h3 style="color: var(--primary);">🔗 Daftar Tautan (Links)</h3>
                     <div id="links-container"></div>
-                    <button class="btn" style="background: rgba(0,0,0,0.05); border: 1px dashed #9ca3af; width: 100%; padding: 15px;" onclick="createLinkBox()">➕ Tambah Tombol Tautan Baru</button>
+                    <button class="btn" style="background: rgba(0,0,0,0.05); border: 1.5px dashed #9ca3af; width: 100%; padding: 16px; color: var(--text-main);" onclick="createLinkBox()">➕ Tambah Tombol Tautan Baru</button>
                     <button class="btn btn-success" id="btnSave">💾 Simpan Desain & Tautan</button>
                 </div>
             </div>
 
-            <!-- LAYAR 3: PENGATURAN PROFIL AKUN -->
             <div id="view-profile" class="view-container">
                 <div class="header-main">
                     <div>
                         <h1 style="margin: 0;">Pengaturan Akun ⚙️</h1>
-                        <p style="margin: 5px 0 0; opacity: 0.8;">Kelola informasi pribadi dan keamanan akses.</p>
+                        <p style="margin: 5px 0 0; opacity: 0.9;">Kelola informasi pribadi dan keamanan akses.</p>
                     </div>
                 </div>
                 <div class="profile-container">
@@ -176,8 +217,8 @@
                         </div>
                         <div>
                             <h3 style="color: var(--primary); margin-top: 0;">Kredensial Login (Auth)</h3>
-                            <div class="form-group"><label>Alamat Email Baru</label><input type="email" id="admin-new-email" placeholder="email.baru@gmail.com"><small style="color: var(--text-muted);">*Link verifikasi akan dikirim jika email diubah.</small></div>
-                            <div class="form-group"><label>Kata Sandi Baru</label><input type="password" id="admin-new-password" placeholder="Minimal 6 karakter"><small style="color: var(--text-muted);">*Kosongkan jika tidak ingin mengubah sandi.</small></div>
+                            <div class="form-group"><label>Alamat Email Baru</label><input type="email" id="admin-new-email" placeholder="email.baru@gmail.com"><small style="color: var(--text-muted); display:block; margin-top: 4px; line-height: 1.3;">*Link verifikasi akan dikirim jika email diubah.</small></div>
+                            <div class="form-group"><label>Kata Sandi Baru</label><input type="password" id="admin-new-password" placeholder="Minimal 6 karakter"><small style="color: var(--text-muted); display:block; margin-top: 4px;">*Kosongkan jika tidak ingin mengubah sandi.</small></div>
                         </div>
                     </div>
                     <button class="btn btn-success" id="btnSaveProfile">🔒 Simpan Pembaruan Akun</button>
@@ -186,7 +227,6 @@
         </main>
     </div>
 
-    <!-- FIREBASE & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
@@ -207,51 +247,37 @@
         
         let profileImageBase64 = ""; let bgImageBase64 = ""; let currentEditingId = null; let adminPicBase64 = ""; 
 
-        // --- SISTEM AUTENTIKASI: LOGIN & REGISTER ---
+        // --- AUTENTIKASI ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'flex';
-                loadDashboardData();
-                loadAdminProfileData(user);
+                loadDashboardData(); loadAdminProfileData(user);
             } else {
                 document.getElementById('login-section').style.display = 'block';
                 document.getElementById('app-layout').style.display = 'none';
             }
         });
 
-        // FUNGSI LOGIN
         document.getElementById('btnLogin').addEventListener('click', () => {
             const btn = document.getElementById('btnLogin'); btn.innerText = "Memproses...";
             signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
                 .catch(() => { alert('Login Gagal! Pastikan email dan sandi benar.'); btn.innerText = "Masuk Dasbor →"; });
         });
 
-        // FUNGSI DAFTAR (REGISTER) PENGGUNA BARU
         document.getElementById('btnRegister').addEventListener('click', () => {
             const btn = document.getElementById('btnRegister'); 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            if(!email || password.length < 6) {
-                alert("Masukkan email yang valid dan sandi minimal 6 karakter."); return;
-            }
-            
+            const email = document.getElementById('email').value; const password = document.getElementById('password').value;
+            if(!email || password.length < 6) { alert("Masukkan email yang valid dan sandi minimal 6 karakter."); return; }
             btn.innerText = "⏳ Mendaftarkan...";
             createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    alert('🎉 Selamat datang! Akun CHERRLINK Anda berhasil dibuat.');
-                    btn.innerText = "✨ Daftar Akun Baru";
-                })
-                .catch((error) => {
-                    alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.');
-                    btn.innerText = "✨ Daftar Akun Baru";
-                });
+                .then(() => { alert('🎉 Selamat datang! Akun CHERRLINK Anda berhasil dibuat.'); btn.innerText = "✨ Daftar Akun Baru"; })
+                .catch(() => { alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.'); btn.innerText = "✨ Daftar Akun Baru"; });
         });
 
         window.logoutApp = () => signOut(auth);
 
-        // --- NAVIGASI VIEW ---
+        // --- NAVIGASI ---
         window.switchView = (viewName) => {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-menu li').forEach(li => li.classList.remove('active'));
@@ -259,7 +285,7 @@
             if(viewName === 'dashboard' || viewName === 'profile') document.getElementById('nav-' + viewName).classList.add('active');
         };
 
-        // --- DASHBOARD: BACA & BUAT PROYEK ---
+        // --- DASHBOARD DATA ---
         function loadDashboardData() {
             onValue(ref(db, 'pages'), (snapshot) => {
                 const pages = snapshot.val();
@@ -274,7 +300,7 @@
                         container.innerHTML += `
                             <div class="project-card">
                                 <h3>${pageData.nama || 'Tanpa Judul'}</h3>
-                                <p style="word-break: break-all;">Tautan:<br> <strong style="color: var(--primary);">${publicLink}</strong></p>
+                                <p style="word-break: break-all;">Tautan Publik:<br> <strong style="color: var(--primary);">${publicLink}</strong></p>
                                 <div class="action-btns">
                                     <button class="btn btn-edit" onclick="openEditor('${pageId}')">✏️ Edit</button>
                                     <button class="btn btn-copy" onclick="copyLink('${publicLink}', this)">🔗 Salin</button>
@@ -284,7 +310,7 @@
                         `;
                     }
                 } else {
-                    container.innerHTML = `<div style="color:white; grid-column: 1/-1; background: rgba(0,0,0,0.2); padding: 20px; border-radius:15px;">Belum ada Web Link. Buat sekarang!</div>`;
+                    container.innerHTML = `<div style="color:white; grid-column: 1/-1; background: rgba(0,0,0,0.2); padding: 20px; border-radius:15px; text-align: center;">Belum ada Web Link. Buat halaman pertamamu sekarang!</div>`;
                 }
             });
         }
@@ -294,16 +320,16 @@
                 const originalText = btnElement.innerText;
                 btnElement.innerText = "✅ Tersalin!"; btnElement.style.background = "#d1fae5"; btnElement.style.color = "#059669";
                 setTimeout(() => { btnElement.innerText = originalText; btnElement.style.background = "#eef2ff"; btnElement.style.color = "#4f46e5"; }, 2000);
-            }).catch(err => alert("Gagal menyalin link."));
+            }).catch(() => alert("Gagal menyalin link."));
         };
 
         window.createNewProject = () => {
-            const rawName = prompt("Masukkan akhiran URL unik untuk Web Link ini\n(Contoh: nama-kamu, bisnis-saya):");
+            const rawName = prompt("Masukkan ID unik untuk Web Link ini\n(Hindari penggunaan spasi, contoh: arini-toko):");
             if (!rawName) return;
             const pageId = rawName.toLowerCase().replace(/[^a-z0-9]/g, '-');
             set(ref(db, 'pages/' + pageId), { nama: "Profil Baru Saya", bio: "", foto: "", background: "", links: [] }).then(() => { openEditor(pageId); });
         };
-        window.deleteProject = (pageId) => { if(confirm(`Hapus halaman "/${pageId}" secara permanen?`)) remove(ref(db, 'pages/' + pageId)); };
+        window.deleteProject = (pageId) => { if(confirm(`Hapus permanen halaman "${pageId}"? Data tidak bisa dikembalikan.`)) remove(ref(db, 'pages/' + pageId)); };
 
         // --- EDITOR PROYEK ---
         window.openEditor = (pageId) => {
@@ -334,6 +360,7 @@
             set(ref(db, 'pages/' + currentEditingId), { nama: document.getElementById('input-name').value, bio: document.getElementById('input-bio').value, foto: profileImageBase64, background: bgImageBase64, links: linksArray }).then(() => { alert('Tersimpan!'); btn.innerText = "💾 Simpan Desain & Tautan"; });
         });
 
+        // --- SISTEM UPLOAD FOTO ---
         function setupFileReader(inputId, previewId, callback) {
             document.getElementById(inputId).addEventListener('change', function(e) {
                 const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { const b64 = event.target.result; document.getElementById(previewId).src = b64; document.getElementById(previewId).style.display = 'block'; callback(b64); }; reader.readAsDataURL(file); }
@@ -349,7 +376,7 @@
             container.appendChild(box);
         };
 
-        // --- SISTEM PENGATURAN PROFIL ADMIN ---
+        // --- SISTEM PENGATURAN PROFIL AKUN ---
         function loadAdminProfileData(user) {
             document.getElementById('admin-new-email').value = user.email; 
             onValue(ref(db, 'admin_profile'), (snapshot) => {
