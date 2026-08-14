@@ -1,0 +1,15 @@
+{
+  "name": "CHERRYLINK",
+  "short_name": "CHERRYLINK",
+  "start_url": "admin.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#900C3F",
+  "icons": [
+    {
+      "src": "https://files.catbox.moe/i5ai61.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
