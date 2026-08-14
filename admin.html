@@ -17,6 +17,28 @@
         #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: -1; }
 
+        /* --- DESAIN IKON LINGKARAN (CHERRY RED) --- */
+        .icon-circle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; transition: 0.3s;
+            background-color: var(--primary); color: white;
+        }
+        .icon-circle svg { width: 16px; height: 16px; fill: currentColor; }
+        .icon-circle.sm { width: 24px; height: 24px; }
+        .icon-circle.sm svg { width: 12px; height: 12px; }
+        .icon-circle.lg { width: 40px; height: 40px; }
+        .icon-circle.lg svg { width: 20px; height: 20px; }
+        .icon-circle.danger { background-color: var(--danger); }
+
+        /* Penyesuaian Ikon pada Tombol & Menu */
+        .nav-menu li.active .icon-circle { background-color: white; color: var(--primary); }
+        .btn-primary .icon-circle { background-color: white; color: var(--primary); }
+        .btn-outline .icon-circle { background-color: var(--primary); color: white; }
+        .btn-edit .icon-circle { background-color: white; color: #0284c7; }
+        .btn-copy .icon-circle { background-color: white; color: #4f46e5; }
+        .btn-danger .icon-circle { background-color: white; color: var(--danger); }
+        .btn-success .icon-circle { background-color: white; color: #10b981; }
+
         /* FORM LOGIN & DAFTAR */
         #login-section { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); padding: 40px; border-radius: 24px; text-align: center; width: 90%; max-width: 380px; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 10; }
         
@@ -27,11 +49,9 @@
         .sidebar { width: 260px; background: var(--sidebar-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.5); display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.05); transition: 0.3s; z-index: 50; }
         .sidebar-header { padding: 30px 20px; font-size: 22px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); letter-spacing: -0.5px; }
         .nav-menu { list-style: none; padding: 20px 10px; margin: 0; flex: 1; display: flex; flex-direction: column; }
-        .nav-menu li { padding: 15px 20px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-main); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+        .nav-menu li { padding: 12px 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-main); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
         .nav-menu li:hover { background: #fff1f2; color: var(--primary); transform: translateX(5px); }
         .nav-menu li.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; }
-        .nav-menu li span.icon { font-size: 18px; }
-        .nav-text { display: block; }
         
         /* AREA KONTEN UTAMA */
         .main-content { flex: 1; overflow-y: auto; padding: 40px; position: relative; }
@@ -56,10 +76,10 @@
         .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #374151; }
         input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 14px; border: 1.5px solid var(--border); border-radius: 12px; box-sizing: border-box; background: rgba(255, 255, 255, 0.9); font-family: inherit; font-size: 14px; transition: 0.3s; }
         input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(144, 12, 63, 0.1); }
-        .alert-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #ffeeba; text-align: left;}
+        .alert-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #ffeeba; text-align: left; display:flex; gap:10px; align-items:center;}
 
         /* BUTTONS */
-        .btn { padding: 12px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 13px; transition: 0.3s; }
+        .btn { padding: 10px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 13px; transition: 0.3s; }
         .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; font-size: 14px;}
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144, 12, 63, 0.4); }
         .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); width: 100%; margin-top: 10px; }
@@ -74,44 +94,31 @@
         /* KISI (GRID) & UPLOAD */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .file-upload-wrapper { display: flex; align-items: center; gap: 16px; }
-        .file-upload-btn { position: relative; overflow: hidden; background: #fff1f2; border: 1.5px dashed var(--primary); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
+        .file-upload-btn { position: relative; overflow: hidden; background: #fff1f2; border: 1.5px dashed var(--primary); padding: 8px 16px; border-radius: 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
         .file-upload-btn input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; width: 100%; }
         .preview-img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; display: none; border: 2px solid var(--border); }
         .preview-img.avatar { border-radius: 50%; width: 80px; height: 80px; }
         
         .link-item-card { background: rgba(255, 255, 255, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: 0.3s; }
+        .link-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 700; color: var(--primary); }
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 30px 0; }
 
         /* ========================================= */
-        /* RESPONSIVE KHUSUS MOBILE (Aplikasi HP)    */
+        /* RESPONSIVE KHUSUS MOBILE                  */
         /* ========================================= */
         @media (max-width: 768px) {
             #login-section { padding: 30px 20px; }
-            
             #app-layout { flex-direction: column; }
             .header-main { flex-direction: column; text-align: center; gap: 15px; }
-            .main-content { padding: 20px 15px 90px; } /* Padding bawah agar tidak tertutup nav bar */
+            .main-content { padding: 20px 15px 90px; } 
             
-            /* Mengubah Sidebar menjadi Bottom App Navigation */
-            .sidebar { 
-                position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; 
-                flex-direction: row; justify-content: space-around; align-items: center; 
-                border-right: none; border-top: 1px solid rgba(255,255,255,0.4); 
-                padding: 0; background: rgba(255,255,255,0.95);
-            }
-            .sidebar-header { display: none; } /* Hilangkan teks header di HP */
-            
-            .nav-menu { 
-                display: flex; flex-direction: row; width: 100%; justify-content: space-around; 
-                padding: 0 10px; margin: 0; align-items: center; 
-            }
-            .nav-menu li { 
-                flex-direction: column; gap: 4px; padding: 8px 5px; margin: 0; 
-                border-radius: 10px; flex: 1; text-align: center; font-size: 11px; font-weight: 700;
-            }
+            .sidebar { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; flex-direction: row; justify-content: space-around; align-items: center; border-right: none; border-top: 1px solid rgba(255,255,255,0.4); padding: 0; background: rgba(255,255,255,0.95); }
+            .sidebar-header { display: none; } 
+            .nav-menu { display: flex; flex-direction: row; width: 100%; justify-content: space-around; padding: 0 10px; margin: 0; align-items: center; }
+            .nav-menu li { flex-direction: column; gap: 4px; padding: 8px 5px; margin: 0; border-radius: 10px; flex: 1; text-align: center; font-size: 11px; font-weight: 700; }
             .nav-menu li:hover { transform: translateY(-2px); }
             
-            .grid-2 { grid-template-columns: 1fr; } /* Grid form menjadi 1 kolom menyusun kebawah */
+            .grid-2 { grid-template-columns: 1fr; } 
             .editor-container, .profile-container { padding: 20px; border-radius: 16px; }
             .link-item-card { padding: 15px; }
         }
@@ -121,8 +128,13 @@
     <video autoplay muted loop playsinline id="bg-video"><source src="https://files.catbox.moe/jnye24.mp4" type="video/mp4"></video>
     <div class="video-overlay"></div>
 
+    <!-- 1. VIEW: FORM LOGIN & DAFTAR -->
     <div id="login-section">
-        <div style="font-size: 45px; margin-bottom: 5px;">🍒</div>
+        <div style="margin-bottom: 15px;">
+            <div class="icon-circle" style="width: 60px; height: 60px;">
+                <svg style="width:30px; height:30px;" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+            </div>
+        </div>
         <h2 style="color: var(--primary); margin: 0 0 5px; font-weight: 800; letter-spacing: -1px; font-size: 26px;">CHERRLINK</h2>
         <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px; font-weight: 500;">Pusat Pengaturan Profil Anda</p>
         
@@ -134,76 +146,108 @@
         </div>
         
         <button class="btn btn-primary" id="btnLogin">Masuk Dasbor →</button>
-        <button class="btn btn-outline" id="btnRegister">✨ Daftar Akun Baru</button>
+        <button class="btn btn-outline" id="btnRegister">
+            <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg></span> Daftar Akun Baru
+        </button>
     </div>
 
+    <!-- 2. VIEW: APLIKASI UTAMA (DASHBOARD) -->
     <div id="app-layout">
         
+        <!-- SIDEBAR (Navigasi Kiri) -->
         <aside class="sidebar">
-            <div class="sidebar-header">🍒 CHERRLINK</div>
+            <div class="sidebar-header">
+                <span class="icon-circle"><svg viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg></span> CHERRLINK
+            </div>
             <ul class="nav-menu">
                 <li id="nav-dashboard" class="active" onclick="switchView('dashboard')">
-                    <span class="icon">🗂️</span> <span class="nav-text">Proyek Saya</span>
+                    <span class="icon-circle"><svg viewBox="0 0 16 16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/></svg></span> 
+                    <span class="nav-text">Proyek Saya</span>
                 </li>
                 <li onclick="createNewProject()">
-                    <span class="icon">✨</span> <span class="nav-text">Buat Web Baru</span>
+                    <span class="icon-circle"><svg viewBox="0 0 16 16"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg></span> 
+                    <span class="nav-text">Buat Web Baru</span>
                 </li>
                 <li id="nav-profile" onclick="switchView('profile')">
-                    <span class="icon">👤</span> <span class="nav-text">Profil Akun</span>
+                    <span class="icon-circle"><svg viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg></span> 
+                    <span class="nav-text">Profil Akun</span>
                 </li>
                 <li style="color: var(--danger);" onclick="logoutApp()">
-                    <span class="icon">🚪</span> <span class="nav-text">Keluar</span>
+                    <span class="icon-circle danger"><svg viewBox="0 0 16 16"><path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2Z"/><path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3Z"/></svg></span> 
+                    <span class="nav-text">Keluar</span>
                 </li>
             </ul>
         </aside>
 
+        <!-- AREA KERJA UTAMA -->
         <main class="main-content">
             
+            <!-- LAYAR 1: DASHBOARD -->
             <div id="view-dashboard" class="view-container active">
                 <div class="header-main">
                     <div>
-                        <h1 style="margin: 0;">Selamat Datang! 👋</h1>
+                        <h1 style="margin: 0;">Selamat Datang!</h1>
                         <p style="margin: 5px 0 0; opacity: 0.9;">Kelola halaman publik CHERRLINK Anda.</p>
                     </div>
-                    <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="createNewProject()">➕ Buat Web Link</button>
+                    <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="createNewProject()">
+                        <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg></span> Buat Web Link
+                    </button>
                 </div>
                 <div class="grid-projects" id="projects-container"></div>
             </div>
 
+            <!-- LAYAR 2: EDITOR PROYEK -->
             <div id="view-editor" class="view-container">
-                <button class="btn btn-back" onclick="switchView('dashboard')">⬅️ Kembali ke Dasbor</button>
+                <button class="btn btn-back" onclick="switchView('dashboard')">
+                    <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span> Kembali ke Dasbor
+                </button>
                 <div class="editor-container">
-                    <h2 style="margin-top: 0; color: var(--primary);">🎨 Desain Tampilan: <span id="editing-id" style="color: #6b7280; font-size: 16px;"></span></h2>
+                    <h2 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                        <span class="icon-circle lg"><svg viewBox="0 0 16 16"><path d="M8 5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm4 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM5.5 7a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/><path d="M16 8c0 3.15-1.866 2.585-3.567 2.07C11.42 9.763 10.465 9.473 10 10c-.603.683-.475 1.819-.351 2.92C9.826 14.495 9.996 16 8 16a8 8 0 1 1 8-8zm-8 7c.611 0 .654-.171.655-.176.078-.146.124-.464.07-1.119-.014-.168-.037-.37-.061-.591-.052-.464-.112-1.005-.118-1.462-.01-.707.083-1.61.704-2.314.369-.417.845-.578 1.272-.618.404-.038.812.026 1.16.104.343.077.702.186 1.025.284l.028.008c.346.105.658.199.953.266.653.148.904.083.991.024C14.717 9.38 15 9.161 15 8a7 7 0 1 0-7 7z"/></svg></span> 
+                        Desain Tampilan <span id="editing-id" style="color: #6b7280; font-size: 16px; font-weight: 500;"></span>
+                    </h2>
                     <div class="grid-2">
                         <div>
                             <div class="form-group"><label>Judul Profil / Nama Brand</label><input type="text" id="input-name" placeholder="Misal: Toko Baju Arini"></div>
                             <div class="form-group"><label>Deskripsi Singkat (Bio)</label><textarea id="input-bio" rows="4" placeholder="Tuliskan sesuatu tentang halaman ini..."></textarea></div>
                         </div>
                         <div>
-                            <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn">📸 Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
-                            <div class="form-group"><label>Latar Belakang (Cover)</label><div class="file-upload-wrapper"><div class="file-upload-btn">🌄 Unggah Cover<input type="file" id="input-bg-file" accept="image/*"></div><img id="preview-bg" class="preview-img"></div></div>
+                            <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/></svg></span> Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
+                            <div class="form-group"><label>Latar Belakang (Cover)</label><div class="file-upload-wrapper"><div class="file-upload-btn"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg></span> Unggah Cover<input type="file" id="input-bg-file" accept="image/*"></div><img id="preview-bg" class="preview-img"></div></div>
                         </div>
                     </div>
                     <hr>
-                    <h3 style="color: var(--primary);">🔗 Daftar Tautan (Links)</h3>
+                    <h3 style="color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                        <span class="icon-circle lg"><svg viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg></span> Daftar Tautan
+                    </h3>
                     <div id="links-container"></div>
-                    <button class="btn" style="background: rgba(0,0,0,0.05); border: 1.5px dashed #9ca3af; width: 100%; padding: 16px; color: var(--text-main);" onclick="createLinkBox()">➕ Tambah Tombol Tautan Baru</button>
-                    <button class="btn btn-success" id="btnSave">💾 Simpan Desain & Tautan</button>
+                    <button class="btn" style="background: rgba(0,0,0,0.05); border: 1.5px dashed #9ca3af; width: 100%; padding: 16px; color: var(--text-main);" onclick="createLinkBox()">
+                        <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg></span> Tambah Tombol Tautan Baru
+                    </button>
+                    <button class="btn btn-success" id="btnSave">
+                        <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4.207a2 2 0 0 0-.586-1.414l-2.793-2.793A2 2 0 0 0 9.207 1H2zm6 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3-7H5v-2h6v2z"/></svg></span> Simpan Desain & Tautan
+                    </button>
                 </div>
             </div>
 
+            <!-- LAYAR 3: PENGATURAN PROFIL AKUN -->
             <div id="view-profile" class="view-container">
                 <div class="header-main">
                     <div>
-                        <h1 style="margin: 0;">Pengaturan Akun ⚙️</h1>
+                        <h1 style="margin: 0;">Pengaturan Akun</h1>
                         <p style="margin: 5px 0 0; opacity: 0.9;">Kelola informasi pribadi dan keamanan akses.</p>
                     </div>
                 </div>
                 <div class="profile-container">
-                    <div class="alert-box"><strong>🛡️ Perlindungan Keamanan:</strong> Masukkan <b>Sandi Lama</b> sebelum mengubah email atau kata sandi baru.</div>
+                    <div class="alert-box">
+                        <span class="icon-circle sm" style="background-color: #d97706; flex-shrink: 0;"><svg viewBox="0 0 16 16"><path d="M8 1.5c-2.5.938-5 1.5-5 1.5v4c0 3.86 2.15 7.42 5 9 2.85-1.58 5-5.14 5-9v-4s-2.5-.562-5-1.5z"/></svg></span>
+                        <div><strong>Perlindungan Keamanan:</strong> Masukkan <b>Sandi Lama</b> sebelum mengubah email atau kata sandi baru.</div>
+                    </div>
                     <div class="grid-2">
                         <div>
-                            <h3 style="color: var(--primary); margin-top: 0;">Data Utama</h3>
+                            <h3 style="color: var(--primary); margin-top: 0; display:flex; align-items:center; gap:8px;">
+                                <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg></span> Data Utama
+                            </h3>
                             <div class="form-group" style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 30px;">
                                 <div class="file-upload-wrapper" style="flex-direction: column;">
                                     <img id="admin-pic-preview" class="preview-img avatar" src="https://ui-avatars.com/api/?name=User" style="display: block;">
@@ -212,21 +256,28 @@
                             </div>
                             <div class="form-group"><label>Nama Pemilik Akun</label><input type="text" id="admin-name" placeholder="Nama Anda"></div>
                             <hr>
-                            <h3 style="color: var(--primary);">Verifikasi Akses</h3>
-                            <div class="form-group"><label style="color: var(--danger);">🔑 Kata Sandi Saat Ini</label><input type="password" id="admin-old-password" placeholder="Masukkan sandi lama..."></div>
+                            <h3 style="color: var(--primary); display:flex; align-items:center; gap:8px;">
+                                <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/></svg></span> Verifikasi Akses
+                            </h3>
+                            <div class="form-group"><label style="color: var(--danger);">Kata Sandi Saat Ini</label><input type="password" id="admin-old-password" placeholder="Masukkan sandi lama..."></div>
                         </div>
                         <div>
-                            <h3 style="color: var(--primary); margin-top: 0;">Kredensial Login (Auth)</h3>
+                            <h3 style="color: var(--primary); margin-top: 0; display:flex; align-items:center; gap:8px;">
+                                <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg></span> Kredensial Login
+                            </h3>
                             <div class="form-group"><label>Alamat Email Baru</label><input type="email" id="admin-new-email" placeholder="email.baru@gmail.com"><small style="color: var(--text-muted); display:block; margin-top: 4px; line-height: 1.3;">*Link verifikasi akan dikirim jika email diubah.</small></div>
                             <div class="form-group"><label>Kata Sandi Baru</label><input type="password" id="admin-new-password" placeholder="Minimal 6 karakter"><small style="color: var(--text-muted); display:block; margin-top: 4px;">*Kosongkan jika tidak ingin mengubah sandi.</small></div>
                         </div>
                     </div>
-                    <button class="btn btn-success" id="btnSaveProfile">🔒 Simpan Pembaruan Akun</button>
+                    <button class="btn btn-success" id="btnSaveProfile">
+                        <span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/></svg></span> Simpan Pembaruan Akun
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
+    <!-- FIREBASE & LOGIC JS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
@@ -269,10 +320,10 @@
             const btn = document.getElementById('btnRegister'); 
             const email = document.getElementById('email').value; const password = document.getElementById('password').value;
             if(!email || password.length < 6) { alert("Masukkan email yang valid dan sandi minimal 6 karakter."); return; }
-            btn.innerText = "⏳ Mendaftarkan...";
+            btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Mendaftarkan...";
             createUserWithEmailAndPassword(auth, email, password)
-                .then(() => { alert('🎉 Selamat datang! Akun CHERRLINK Anda berhasil dibuat.'); btn.innerText = "✨ Daftar Akun Baru"; })
-                .catch(() => { alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.'); btn.innerText = "✨ Daftar Akun Baru"; });
+                .then(() => { alert('🎉 Selamat datang! Akun CHERRLINK Anda berhasil dibuat.'); btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Daftar Akun Baru"; })
+                .catch(() => { alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.'); btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z'/></svg></span> Daftar Akun Baru"; });
         });
 
         window.logoutApp = () => signOut(auth);
@@ -302,9 +353,9 @@
                                 <h3>${pageData.nama || 'Tanpa Judul'}</h3>
                                 <p style="word-break: break-all;">Tautan Publik:<br> <strong style="color: var(--primary);">${publicLink}</strong></p>
                                 <div class="action-btns">
-                                    <button class="btn btn-edit" onclick="openEditor('${pageId}')">✏️ Edit</button>
-                                    <button class="btn btn-copy" onclick="copyLink('${publicLink}', this)">🔗 Salin</button>
-                                    <button class="btn btn-danger" onclick="deleteProject('${pageId}')">🗑️</button>
+                                    <button class="btn btn-edit" onclick="openEditor('${pageId}')"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/></svg></span> Edit</button>
+                                    <button class="btn btn-copy" onclick="copyLink('${publicLink}', this)"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg></span> Salin</button>
+                                    <button class="btn btn-danger" style="flex:1" onclick="deleteProject('${pageId}')"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg></span> Hapus</button>
                                 </div>
                             </div>
                         `;
@@ -317,9 +368,9 @@
         
         window.copyLink = (url, btnElement) => {
             navigator.clipboard.writeText(url).then(() => {
-                const originalText = btnElement.innerText;
-                btnElement.innerText = "✅ Tersalin!"; btnElement.style.background = "#d1fae5"; btnElement.style.color = "#059669";
-                setTimeout(() => { btnElement.innerText = originalText; btnElement.style.background = "#eef2ff"; btnElement.style.color = "#4f46e5"; }, 2000);
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = "✅ Tersalin!"; btnElement.style.background = "#d1fae5"; btnElement.style.color = "#059669";
+                setTimeout(() => { btnElement.innerHTML = originalHTML; btnElement.style.background = "#eef2ff"; btnElement.style.color = "#4f46e5"; }, 2000);
             }).catch(() => alert("Gagal menyalin link."));
         };
 
@@ -350,14 +401,15 @@
         };
 
         document.getElementById('btnSave').addEventListener('click', () => {
-            const btn = document.getElementById('btnSave'); btn.innerText = "⏳ Menyimpan...";
+            const btn = document.getElementById('btnSave'); 
+            const originalHTML = btn.innerHTML; btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4.207a2 2 0 0 0-.586-1.414l-2.793-2.793A2 2 0 0 0 9.207 1H2zm6 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3-7H5v-2h6v2z'/></svg></span> Menyimpan...";
             let linksArray = [];
             document.querySelectorAll('.link-item-card').forEach(box => {
                 const title = box.querySelector('.link-title').value; const url = box.querySelector('.link-url').value;
                 const iconSrc = box.querySelector('.link-icon-preview').src; const iconBase64 = iconSrc.startsWith('data:image') ? iconSrc : "";
                 if(title.trim() !== "" && url.trim() !== "") linksArray.push({ title: title, url: url, icon: iconBase64 });
             });
-            set(ref(db, 'pages/' + currentEditingId), { nama: document.getElementById('input-name').value, bio: document.getElementById('input-bio').value, foto: profileImageBase64, background: bgImageBase64, links: linksArray }).then(() => { alert('Tersimpan!'); btn.innerText = "💾 Simpan Desain & Tautan"; });
+            set(ref(db, 'pages/' + currentEditingId), { nama: document.getElementById('input-name').value, bio: document.getElementById('input-bio').value, foto: profileImageBase64, background: bgImageBase64, links: linksArray }).then(() => { alert('Tersimpan!'); btn.innerHTML = originalHTML; });
         });
 
         // --- SISTEM UPLOAD FOTO ---
@@ -370,7 +422,7 @@
 
         window.createLinkBox = (title = "", url = "", iconBase64 = "") => {
             const container = document.getElementById('links-container'); const box = document.createElement('div'); box.className = 'link-item-card';
-            box.innerHTML = `<div class="link-item-header"><span>✨ Tombol Tautan</span><button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">Hapus</button></div><div class="grid-2"><div class="form-group"><label>Judul Teks</label><input type="text" class="link-title" value="${title}"></div><div class="form-group"><label>URL Tujuan</label><input type="text" class="link-url" value="${url}"></div></div><div class="form-group" style="margin-bottom:0;"><label>Ikon (Opsional)</label><div class="file-upload-wrapper"><div class="file-upload-btn">Pilih Ikon<input type="file" class="link-icon-input" accept="image/*"></div><img class="preview-img link-icon-preview" src="${iconBase64}" style="${iconBase64 ? 'display:block;' : 'display:none;'}"></div></div>`;
+            box.innerHTML = `<div class="link-item-header"><span style="display:flex; align-items:center; gap:8px;"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg></span> Tautan</span><button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">Hapus</button></div><div class="grid-2"><div class="form-group"><label>Judul Teks</label><input type="text" class="link-title" value="${title}"></div><div class="form-group"><label>URL Tujuan</label><input type="text" class="link-url" value="${url}"></div></div><div class="form-group" style="margin-bottom:0;"><label>Ikon (Opsional)</label><div class="file-upload-wrapper"><div class="file-upload-btn">Pilih Ikon<input type="file" class="link-icon-input" accept="image/*"></div><img class="preview-img link-icon-preview" src="${iconBase64}" style="${iconBase64 ? 'display:block;' : 'display:none;'}"></div></div>`;
             box.querySelector('.btn-danger').addEventListener('click', () => box.remove());
             box.querySelector('.link-icon-input').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { const preview = box.querySelector('.link-icon-preview'); preview.src = event.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(file); } });
             container.appendChild(box);
@@ -387,17 +439,18 @@
 
         document.getElementById('btnSaveProfile').addEventListener('click', async () => {
             const btn = document.getElementById('btnSaveProfile'); const oldPassword = document.getElementById('admin-old-password').value; const newEmail = document.getElementById('admin-new-email').value; const newPassword = document.getElementById('admin-new-password').value; const adminName = document.getElementById('admin-name').value; const user = auth.currentUser;
-            btn.innerText = "⏳ Memproses...";
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = "<span class='icon-circle sm'><svg viewBox='0 0 16 16'><path d='M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z'/></svg></span> Memproses...";
             try {
                 await set(ref(db, 'admin_profile'), { nama: adminName, foto: adminPicBase64 });
                 if (newEmail !== user.email || newPassword !== "") {
-                    if (!oldPassword) { alert("Harap masukkan Kata Sandi Saat Ini (Lama) untuk otorisasi!"); btn.innerText = "🔒 Simpan Pembaruan Akun"; return; }
+                    if (!oldPassword) { alert("Harap masukkan Kata Sandi Saat Ini (Lama) untuk otorisasi!"); btn.innerHTML = originalHTML; return; }
                     await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, oldPassword));
                     if (newPassword !== "") { await updatePassword(user, newPassword); alert("✅ Kata Sandi diperbarui!"); document.getElementById('admin-new-password').value = ""; }
                     if (newEmail !== user.email) { await verifyBeforeUpdateEmail(user, newEmail); alert(`📧 Link Konfirmasi dikirim ke ${newEmail}.`); }
                 } else { alert("✅ Profil disimpan!"); }
-                document.getElementById('admin-old-password').value = ""; btn.innerText = "🔒 Simpan Pembaruan Akun";
-            } catch (error) { alert("❌ Gagal: Cek kembali sandi lama Anda."); btn.innerText = "🔒 Simpan Pembaruan Akun"; }
+                document.getElementById('admin-old-password').value = ""; btn.innerHTML = originalHTML;
+            } catch (error) { alert("❌ Gagal: Cek kembali sandi lama Anda."); btn.innerHTML = originalHTML; }
         });
     </script>
 </body>
