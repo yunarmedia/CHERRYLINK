@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CHERRYLINK - Dashboard Admin</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#900C3F">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/i5ai61.png">
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/i5ai61.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,10 +24,7 @@
             --danger: #ef4444; --success: #10b981;
         }
         
-        /* Font Inter diaplikasikan ke body */
         body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 500; color: var(--text-main); overflow: hidden; background-color: #111; letter-spacing: -0.3px; }
-        
-        /* Headings bergaya Extra Bold */
         h1, h2, h3 { font-weight: 800; letter-spacing: -1px; margin-top: 0; }
         
         #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
@@ -67,11 +70,8 @@
         
         .project-card { padding: 25px; border-radius: 24px; display: flex; flex-direction: column; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .project-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border-color: rgba(255,255,255,1); background: rgba(255, 255, 255, 0.6); }
-        
-        /* MEMASTIKAN TEKS CARD LEBIH TEBAL DAN JELAS */
         .project-card h3 { color: var(--primary); font-size: 22px; font-weight: 800; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
         .project-card p { margin: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.5; flex: 1; font-weight: 600; text-shadow: 0 1px 1px rgba(255,255,255,0.5); }
-        
         .action-btns { display: flex; gap: 8px; flex-wrap: wrap; }
         
         .editor-container, .profile-container { padding: 35px; border-radius: 30px; margin-bottom: 40px; }
@@ -82,7 +82,6 @@
         input:focus, textarea:focus { outline: none; border-color: white; background: rgba(255,255,255,0.9); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.4); }
         .alert-box { background: rgba(255, 243, 205, 0.7); backdrop-filter: blur(10px); color: #856404; padding: 15px; border-radius: 16px; font-size: 14px; font-weight: 600; margin-bottom: 20px; border: 1px solid rgba(255, 238, 186, 0.8); text-align: left; display:flex; gap:10px; align-items:center;}
 
-        /* BUTTONS (Super Tebal) */
         .btn { padding: 14px 16px; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 14px; letter-spacing: -0.3px; transition: 0.3s; }
         .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; font-size: 15px; font-weight: 800; box-shadow: 0 8px 20px rgba(144, 12, 63, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(144, 12, 63, 0.4); }
@@ -131,13 +130,11 @@
     <div class="video-overlay"></div>
 
     <div id="login-section" class="glass-panel">
-        <div style="margin-bottom: 20px;">
-            <div class="icon-circle lg" style="width: 75px; height: 75px; box-shadow: 0 10px 20px rgba(144,12,63,0.3);">
-                <svg style="width:38px; height:38px;" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-            </div>
+        <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+            <img src="https://files.catbox.moe/i5ai61.png" alt="Cherry Logo" style="width: 75px; height: 75px; object-fit: contain; filter: drop-shadow(0 8px 15px rgba(144,12,63,0.4)); opacity: 0.95;">
         </div>
         <h2 style="color: var(--primary); margin: 0 0 5px; font-weight: 900; letter-spacing: -1.5px; font-size: 30px; text-shadow: 0 2px 5px rgba(255,255,255,0.8);">CHERRYLINK</h2>
-        <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 30px; font-weight: 700;">SaaS Link-in-Bio Terbaik</p>
+        <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 30px; font-weight: 700;">Platform Link-in-Bio Profesional</p>
         
         <div class="form-group">
             <input type="email" id="email" placeholder="Alamat Email (nama@email.com)">
@@ -156,7 +153,7 @@
         
         <aside class="sidebar">
             <div class="sidebar-header">
-                <span class="icon-circle"><svg viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg></span> CHERRYLINK
+                <img src="https://files.catbox.moe/i5ai61.png" alt="Logo" style="width: 28px; height: 28px; object-fit: contain;"> CHERRYLINK
             </div>
             <ul class="nav-menu">
                 <li id="nav-dashboard" class="active" onclick="switchView('dashboard')">
@@ -208,7 +205,7 @@
                             <div class="form-group"><label>Deskripsi Singkat (Bio)</label><textarea id="input-bio" rows="4" placeholder="Tuliskan sesuatu tentang halaman ini..."></textarea></div>
                         </div>
                         <div>
-                            <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/></svg></span> Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
+                            <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0 z"/></svg></span> Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
                             <div class="form-group"><label>Latar Belakang (Cover)</label><div class="file-upload-wrapper"><div class="file-upload-btn"><span class="icon-circle sm"><svg viewBox="0 0 16 16"><path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/></svg></span> Unggah Cover<input type="file" id="input-bg-file" accept="image/*"></div><img id="preview-bg" class="preview-img"></div></div>
                         </div>
                     </div>
