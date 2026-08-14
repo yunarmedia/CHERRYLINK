@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHERRLINK Admin SaaS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #900C3F; --primary-hover: #C70039;
+            --sidebar-bg: rgba(255, 255, 255, 0.85); --card-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #1f2937; --text-muted: #6b7280;
+            --border: rgba(0,0,0,0.1); --danger: #ef4444; --success: #10b981;
+        }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); overflow: hidden; }
+        
+        #bg-video { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -2; transform: translate(-50%, -50%); object-fit: cover; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: -1; }
+
+        /* FORM LOGIN & DAFTAR */
+        #login-section { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); padding: 40px; border-radius: 24px; text-align: center; width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); backdrop-filter: blur(20px); z-index: 10; }
+        
+        #app-layout { display: none; width: 100vw; height: 100vh; display: flex; z-index: 1; position: relative; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.5); display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.05); }
+        .sidebar-header { padding: 30px 20px; font-size: 22px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+        .nav-menu { list-style: none; padding: 20px 10px; margin: 0; flex: 1; }
+        .nav-menu li { padding: 15px 20px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-main); transition: 0.3s; display: flex; align-items: center; gap: 12px; }
+        .nav-menu li:hover { background: #fff1f2; color: var(--primary); transform: translateX(5px); }
+        .nav-menu li.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; }
+        
+        .main-content { flex: 1; overflow-y: auto; padding: 40px; }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        
+        .view-container { display: none; } .view-container.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .header-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .grid-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .project-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.8); transition: 0.3s; }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-color: var(--primary); }
+        .project-card h3 { margin: 0 0 5px; color: var(--primary); font-size: 20px; }
+        .project-card p { margin: 0 0 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .action-btns { display: flex; gap: 10px; }
+        
+        .editor-container, .profile-container { background: var(--card-bg); border-radius: 24px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); }
+        
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #374151; }
+        input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 14px; border: 1.5px solid var(--border); border-radius: 12px; box-sizing: border-box; background: rgba(255, 255, 255, 0.9); font-family: inherit; font-size: 14px; transition: 0.3s; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(144, 12, 63, 0.1); }
+        .alert-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #ffeeba; text-align: left;}
+
+        .btn { padding: 12px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 14px; transition: 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144, 12, 63, 0.4); }
+        
+        .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); width: 100%; margin-top: 10px; }
+        .btn-outline:hover { background: #fff1f2; }
+        
+        .btn-edit { background: #e0f2fe; color: #0284c7; flex: 1; }
+        .btn-copy { background: #eef2ff; color: #4f46e5; flex: 1; }
+        .btn-danger { background: #fee2e2; color: #ef4444; }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 100%; padding: 16px; font-size: 16px; margin-top: 20px; }
+        .btn-back { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px); margin-bottom: 20px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .file-upload-wrapper { display: flex; align-items: center; gap: 16px; }
+        .file-upload-btn { position: relative; overflow: hidden; background: #fff1f2; border: 1.5px dashed var(--primary); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 8px; }
+        .file-upload-btn input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer; height: 100%; width: 100%; }
+        .preview-img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; display: none; border: 2px solid var(--border); }
+        .preview-img.avatar { border-radius: 50%; width: 80px; height: 80px; }
+        
+        .link-item-card { background: rgba(255, 255, 255, 0.6); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; transition: 0.3s; }
+        hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 30px 0; }
+
+        @media (max-width: 768px) {
+            #app-layout { flex-direction: column; } .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; justify-content: space-between; padding: 15px; } .sidebar-header { display: none; } .nav-menu { display: flex; gap: 10px; padding: 0; } .nav-menu li span { display: none; } .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop playsinline id="bg-video"><source src="https://files.catbox.moe/jnye24.mp4" type="video/mp4"></video>
+    <div class="video-overlay"></div>
+
+    <!-- 1. VIEW: FORM LOGIN & DAFTAR -->
+    <div id="login-section">
+        <div style="font-size: 40px; margin-bottom: 10px;">🍒</div>
+        <h2 style="color: var(--primary); margin: 0 0 5px;">CHERRLINK</h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 25px;">SaaS Link-in-Bio Builder</p>
+        
+        <div class="form-group">
+            <label>Alamat Email</label>
+            <input type="email" id="email" placeholder="nama@email.com">
+        </div>
+        <div class="form-group">
+            <label>Kata Sandi</label>
+            <input type="password" id="password" placeholder="Minimal 6 karakter">
+        </div>
+        
+        <!-- Tombol Login dan Daftar -->
+        <button class="btn btn-primary" id="btnLogin">Masuk Dasbor →</button>
+        <button class="btn btn-outline" id="btnRegister">✨ Daftar Akun Baru</button>
+    </div>
+
+    <!-- 2. VIEW: APLIKASI UTAMA (DASHBOARD SAAS) -->
+    <div id="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">🍒 CHERRLINK</div>
+            <ul class="nav-menu">
+                <li id="nav-dashboard" class="active" onclick="switchView('dashboard')">🗂️ <span>Proyek Saya</span></li>
+                <li onclick="createNewProject()">✨ <span>Buat Web Baru</span></li>
+                <li id="nav-profile" onclick="switchView('profile')">👤 <span>Profil Akun</span></li>
+                <li style="margin-top: auto; color: var(--danger);" onclick="logoutApp()">🚪 <span>Keluar</span></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- LAYAR 1: DASHBOARD -->
+            <div id="view-dashboard" class="view-container active">
+                <div class="header-main">
+                    <div>
+                        <h1 style="margin: 0;">Selamat Datang! 👋</h1>
+                        <p style="margin: 5px 0 0; opacity: 0.8;">Kelola halaman publikmu di sini.</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="createNewProject()">➕ Buat Web Link</button>
+                </div>
+                <div class="grid-projects" id="projects-container"></div>
+            </div>
+
+            <!-- LAYAR 2: EDITOR PROYEK -->
+            <div id="view-editor" class="view-container">
+                <button class="btn btn-back" onclick="switchView('dashboard')">⬅️ Kembali ke Dasbor</button>
+                <div class="editor-container">
+                    <h2 style="margin-top: 0; color: var(--primary);">🎨 Edit Desain: <span id="editing-id" style="color: #6b7280;"></span></h2>
+                    <div class="grid-2">
+                        <div>
+                            <div class="form-group"><label>Nama Web Link</label><input type="text" id="input-name" placeholder="Misal: Profil Utama"></div>
+                            <div class="form-group"><label>Deskripsi Singkat (Bio)</label><textarea id="input-bio" rows="4"></textarea></div>
+                        </div>
+                        <div>
+                            <div class="form-group"><label>Foto Profil Tengah</label><div class="file-upload-wrapper"><div class="file-upload-btn">📸 Unggah Foto<input type="file" id="input-pic-file" accept="image/*"></div><img id="preview-pic" class="preview-img"></div></div>
+                            <div class="form-group"><label>Latar Belakang (Cover)</label><div class="file-upload-wrapper"><div class="file-upload-btn">🌄 Unggah Cover<input type="file" id="input-bg-file" accept="image/*"></div><img id="preview-bg" class="preview-img"></div></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h3 style="color: var(--primary);">🔗 Daftar Tautan (Links)</h3>
+                    <div id="links-container"></div>
+                    <button class="btn" style="background: rgba(0,0,0,0.05); border: 1px dashed #9ca3af; width: 100%; padding: 15px;" onclick="createLinkBox()">➕ Tambah Tombol Tautan Baru</button>
+                    <button class="btn btn-success" id="btnSave">💾 Simpan Desain & Tautan</button>
+                </div>
+            </div>
+
+            <!-- LAYAR 3: PENGATURAN PROFIL AKUN -->
+            <div id="view-profile" class="view-container">
+                <div class="header-main">
+                    <div>
+                        <h1 style="margin: 0;">Pengaturan Akun ⚙️</h1>
+                        <p style="margin: 5px 0 0; opacity: 0.8;">Kelola informasi pribadi dan keamanan akses.</p>
+                    </div>
+                </div>
+                <div class="profile-container">
+                    <div class="alert-box"><strong>🛡️ Perlindungan Keamanan:</strong> Masukkan <b>Sandi Lama</b> sebelum mengubah email atau kata sandi baru.</div>
+                    <div class="grid-2">
+                        <div>
+                            <h3 style="color: var(--primary); margin-top: 0;">Data Utama</h3>
+                            <div class="form-group" style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 30px;">
+                                <div class="file-upload-wrapper" style="flex-direction: column;">
+                                    <img id="admin-pic-preview" class="preview-img avatar" src="https://ui-avatars.com/api/?name=User" style="display: block;">
+                                    <div class="file-upload-btn" style="padding: 6px 12px; font-size: 12px;">📸 Ubah Avatar<input type="file" id="admin-pic-input" accept="image/*"></div>
+                                </div>
+                            </div>
+                            <div class="form-group"><label>Nama Pemilik Akun</label><input type="text" id="admin-name" placeholder="Nama Anda"></div>
+                            <hr>
+                            <h3 style="color: var(--primary);">Verifikasi Akses</h3>
+                            <div class="form-group"><label style="color: var(--danger);">🔑 Kata Sandi Saat Ini</label><input type="password" id="admin-old-password" placeholder="Masukkan sandi lama..."></div>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--primary); margin-top: 0;">Kredensial Login (Auth)</h3>
+                            <div class="form-group"><label>Alamat Email Baru</label><input type="email" id="admin-new-email" placeholder="email.baru@gmail.com"><small style="color: var(--text-muted);">*Link verifikasi akan dikirim jika email diubah.</small></div>
+                            <div class="form-group"><label>Kata Sandi Baru</label><input type="password" id="admin-new-password" placeholder="Minimal 6 karakter"><small style="color: var(--text-muted);">*Kosongkan jika tidak ingin mengubah sandi.</small></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success" id="btnSaveProfile">🔒 Simpan Pembaruan Akun</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FIREBASE & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, verifyBeforeUpdateEmail, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjz5CRk3lPfCkCMwUQkeratVBF1RV58Nk",
+            authDomain: "yunarlinks.firebaseapp.com",
+            projectId: "yunarlinks",
+            storageBucket: "yunarlinks.firebasestorage.app",
+            messagingSenderId: "34387541307",
+            appId: "1:34387541307:web:ac3640d587e2ecbb074b1e",
+            databaseURL: "https://yunarlinks-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+        
+        let profileImageBase64 = ""; let bgImageBase64 = ""; let currentEditingId = null; let adminPicBase64 = ""; 
+
+        // --- SISTEM AUTENTIKASI: LOGIN & REGISTER ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('app-layout').style.display = 'flex';
+                loadDashboardData();
+                loadAdminProfileData(user);
+            } else {
+                document.getElementById('login-section').style.display = 'block';
+                document.getElementById('app-layout').style.display = 'none';
+            }
+        });
+
+        // FUNGSI LOGIN
+        document.getElementById('btnLogin').addEventListener('click', () => {
+            const btn = document.getElementById('btnLogin'); btn.innerText = "Memproses...";
+            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
+                .catch(() => { alert('Login Gagal! Pastikan email dan sandi benar.'); btn.innerText = "Masuk Dasbor →"; });
+        });
+
+        // FUNGSI DAFTAR (REGISTER) PENGGUNA BARU
+        document.getElementById('btnRegister').addEventListener('click', () => {
+            const btn = document.getElementById('btnRegister'); 
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if(!email || password.length < 6) {
+                alert("Masukkan email yang valid dan sandi minimal 6 karakter."); return;
+            }
+            
+            btn.innerText = "⏳ Mendaftarkan...";
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert('🎉 Selamat datang! Akun CHERRLINK Anda berhasil dibuat.');
+                    btn.innerText = "✨ Daftar Akun Baru";
+                })
+                .catch((error) => {
+                    alert('Pendaftaran Gagal: Email mungkin sudah digunakan atau format salah.');
+                    btn.innerText = "✨ Daftar Akun Baru";
+                });
+        });
+
+        window.logoutApp = () => signOut(auth);
+
+        // --- NAVIGASI VIEW ---
+        window.switchView = (viewName) => {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-menu li').forEach(li => li.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            if(viewName === 'dashboard' || viewName === 'profile') document.getElementById('nav-' + viewName).classList.add('active');
+        };
+
+        // --- DASHBOARD: BACA & BUAT PROYEK ---
+        function loadDashboardData() {
+            onValue(ref(db, 'pages'), (snapshot) => {
+                const pages = snapshot.val();
+                const container = document.getElementById('projects-container');
+                container.innerHTML = '';
+                if (pages) {
+                    for (let pageId in pages) {
+                        const pageData = pages[pageId];
+                        const linkCount = pageData.links ? pageData.links.length : 0;
+                        let baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/';
+                        let publicLink = baseUrl + "?u=" + pageId;
+                        container.innerHTML += `
+                            <div class="project-card">
+                                <h3>${pageData.nama || 'Tanpa Judul'}</h3>
+                                <p style="word-break: break-all;">Tautan:<br> <strong style="color: var(--primary);">${publicLink}</strong></p>
+                                <div class="action-btns">
+                                    <button class="btn btn-edit" onclick="openEditor('${pageId}')">✏️ Edit</button>
+                                    <button class="btn btn-copy" onclick="copyLink('${publicLink}', this)">🔗 Salin</button>
+                                    <button class="btn btn-danger" onclick="deleteProject('${pageId}')">🗑️</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    container.innerHTML = `<div style="color:white; grid-column: 1/-1; background: rgba(0,0,0,0.2); padding: 20px; border-radius:15px;">Belum ada Web Link. Buat sekarang!</div>`;
+                }
+            });
+        }
+        
+        window.copyLink = (url, btnElement) => {
+            navigator.clipboard.writeText(url).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "✅ Tersalin!"; btnElement.style.background = "#d1fae5"; btnElement.style.color = "#059669";
+                setTimeout(() => { btnElement.innerText = originalText; btnElement.style.background = "#eef2ff"; btnElement.style.color = "#4f46e5"; }, 2000);
+            }).catch(err => alert("Gagal menyalin link."));
+        };
+
+        window.createNewProject = () => {
+            const rawName = prompt("Masukkan akhiran URL unik untuk Web Link ini\n(Contoh: nama-kamu, bisnis-saya):");
+            if (!rawName) return;
+            const pageId = rawName.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            set(ref(db, 'pages/' + pageId), { nama: "Profil Baru Saya", bio: "", foto: "", background: "", links: [] }).then(() => { openEditor(pageId); });
+        };
+        window.deleteProject = (pageId) => { if(confirm(`Hapus halaman "/${pageId}" secara permanen?`)) remove(ref(db, 'pages/' + pageId)); };
+
+        // --- EDITOR PROYEK ---
+        window.openEditor = (pageId) => {
+            currentEditingId = pageId; document.getElementById('editing-id').innerText = "/?u=" + pageId;
+            profileImageBase64 = ""; bgImageBase64 = "";
+            document.getElementById('preview-pic').style.display = 'none'; document.getElementById('preview-bg').style.display = 'none';
+            document.getElementById('links-container').innerHTML = ''; switchView('editor');
+
+            onValue(ref(db, 'pages/' + pageId), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('input-name').value = data.nama || ''; document.getElementById('input-bio').value = data.bio || '';
+                    if(data.foto) { profileImageBase64 = data.foto; document.getElementById('preview-pic').src = data.foto; document.getElementById('preview-pic').style.display = 'block'; }
+                    if(data.background) { bgImageBase64 = data.background; document.getElementById('preview-bg').src = data.background; document.getElementById('preview-bg').style.display = 'block'; }
+                    if(data.links && Array.isArray(data.links)) data.links.forEach(link => window.createLinkBox(link.title, link.url, link.icon));
+                }
+            }, { onlyOnce: true });
+        };
+
+        document.getElementById('btnSave').addEventListener('click', () => {
+            const btn = document.getElementById('btnSave'); btn.innerText = "⏳ Menyimpan...";
+            let linksArray = [];
+            document.querySelectorAll('.link-item-card').forEach(box => {
+                const title = box.querySelector('.link-title').value; const url = box.querySelector('.link-url').value;
+                const iconSrc = box.querySelector('.link-icon-preview').src; const iconBase64 = iconSrc.startsWith('data:image') ? iconSrc : "";
+                if(title.trim() !== "" && url.trim() !== "") linksArray.push({ title: title, url: url, icon: iconBase64 });
+            });
+            set(ref(db, 'pages/' + currentEditingId), { nama: document.getElementById('input-name').value, bio: document.getElementById('input-bio').value, foto: profileImageBase64, background: bgImageBase64, links: linksArray }).then(() => { alert('Tersimpan!'); btn.innerText = "💾 Simpan Desain & Tautan"; });
+        });
+
+        function setupFileReader(inputId, previewId, callback) {
+            document.getElementById(inputId).addEventListener('change', function(e) {
+                const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { const b64 = event.target.result; document.getElementById(previewId).src = b64; document.getElementById(previewId).style.display = 'block'; callback(b64); }; reader.readAsDataURL(file); }
+            });
+        }
+        setupFileReader('input-pic-file', 'preview-pic', (b64) => { profileImageBase64 = b64; }); setupFileReader('input-bg-file', 'preview-bg', (b64) => { bgImageBase64 = b64; }); setupFileReader('admin-pic-input', 'admin-pic-preview', (b64) => { adminPicBase64 = b64; }); 
+
+        window.createLinkBox = (title = "", url = "", iconBase64 = "") => {
+            const container = document.getElementById('links-container'); const box = document.createElement('div'); box.className = 'link-item-card';
+            box.innerHTML = `<div class="link-item-header"><span>✨ Tombol Tautan</span><button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">Hapus</button></div><div class="grid-2"><div class="form-group"><label>Judul Teks</label><input type="text" class="link-title" value="${title}"></div><div class="form-group"><label>URL Tujuan</label><input type="text" class="link-url" value="${url}"></div></div><div class="form-group" style="margin-bottom:0;"><label>Ikon (Opsional)</label><div class="file-upload-wrapper"><div class="file-upload-btn">Pilih Ikon<input type="file" class="link-icon-input" accept="image/*"></div><img class="preview-img link-icon-preview" src="${iconBase64}" style="${iconBase64 ? 'display:block;' : 'display:none;'}"></div></div>`;
+            box.querySelector('.btn-danger').addEventListener('click', () => box.remove());
+            box.querySelector('.link-icon-input').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { const preview = box.querySelector('.link-icon-preview'); preview.src = event.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(file); } });
+            container.appendChild(box);
+        };
+
+        // --- SISTEM PENGATURAN PROFIL ADMIN ---
+        function loadAdminProfileData(user) {
+            document.getElementById('admin-new-email').value = user.email; 
+            onValue(ref(db, 'admin_profile'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) { document.getElementById('admin-name').value = data.nama || ''; if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; } }
+            }, { onlyOnce: true });
+        }
+
+        document.getElementById('btnSaveProfile').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSaveProfile'); const oldPassword = document.getElementById('admin-old-password').value; const newEmail = document.getElementById('admin-new-email').value; const newPassword = document.getElementById('admin-new-password').value; const adminName = document.getElementById('admin-name').value; const user = auth.currentUser;
+            btn.innerText = "⏳ Memproses...";
+            try {
+                await set(ref(db, 'admin_profile'), { nama: adminName, foto: adminPicBase64 });
+                if (newEmail !== user.email || newPassword !== "") {
+                    if (!oldPassword) { alert("Harap masukkan Kata Sandi Saat Ini (Lama) untuk otorisasi!"); btn.innerText = "🔒 Simpan Pembaruan Akun"; return; }
+                    await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, oldPassword));
+                    if (newPassword !== "") { await updatePassword(user, newPassword); alert("✅ Kata Sandi diperbarui!"); document.getElementById('admin-new-password').value = ""; }
+                    if (newEmail !== user.email) { await verifyBeforeUpdateEmail(user, newEmail); alert(`📧 Link Konfirmasi dikirim ke ${newEmail}.`); }
+                } else { alert("✅ Profil disimpan!"); }
+                document.getElementById('admin-old-password').value = ""; btn.innerText = "🔒 Simpan Pembaruan Akun";
+            } catch (error) { alert("❌ Gagal: Cek kembali sandi lama Anda."); btn.innerText = "🔒 Simpan Pembaruan Akun"; }
+        });
+    </script>
+</body>
+</html>
