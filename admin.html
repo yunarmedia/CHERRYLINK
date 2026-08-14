@@ -245,7 +245,6 @@
                 </div>
             </div>
 
-            <!-- VIEW EDITOR: DIMODIFIKASI AGAR INPUT ID URL BERADA DI DALAMNYA -->
             <div id="view-editor" class="view-container">
                 <button class="btn btn-back" onclick="switchView('dashboard')">
                     <span class="icon-circle sm" style="background-color: var(--text-main);"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></span> Kembali ke Dasbor
@@ -256,7 +255,6 @@
                         Desain Tampilan 
                     </h2>
                     
-                    <!-- INPUT ID URL UNIK DI DALAM EDITOR -->
                     <div class="form-group" style="background: rgba(144, 12, 63, 0.08); padding: 20px; border-radius: 20px; border: 1.5px dashed var(--primary);">
                         <label style="color: var(--primary);">🔗 URL Unik Web Link (?u=)</label>
                         <input type="text" id="input-pageid" placeholder="Contoh: arini-toko, bisnis-saya" style="background: white;">
@@ -399,7 +397,20 @@
 
         window.openLivePreview = () => {
             let baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/')) + '/';
-            window.open(baseUrl + 'index.html', '_blank');
+            if (currentEditingId) {
+                window.open(baseUrl + 'index.html?u=' + currentEditingId, '_blank');
+            } else {
+                const dbPagesRef = ref(db, 'pages');
+                onValue(dbPagesRef, (snapshot) => {
+                    const pages = snapshot.val();
+                    if (pages) {
+                        const firstPageId = Object.keys(pages)[0];
+                        window.open(baseUrl + 'index.html?u=' + firstPageId, '_blank');
+                    } else {
+                        alert("Belum ada Web Link yang dibuat. Silakan buat satu terlebih dahulu!");
+                    }
+                }, { onlyOnce: true });
+            }
         };
 
         function loadDashboardData() {
@@ -450,11 +461,12 @@
             }).catch(() => alert("Gagal menyalin link."));
         };
 
-        // FUNGSI BUAT WEB BARU (MENGGUNAKAN INPUT DALAM EDITOR, BUKAN PROMPT BAWAAN)
         window.createNewProject = () => {
             currentEditingId = null;
-            document.getElementById('input-pageid').value = "";
-            document.getElementById('input-pageid').disabled = false; // Kolom ID bisa diketik untuk proyek baru
+            const pageIdInput = document.getElementById('input-pageid');
+            pageIdInput.value = "";
+            pageIdInput.disabled = false;
+            
             document.getElementById('input-name').value = "Profil Baru Saya";
             document.getElementById('input-bio').value = "";
             document.getElementById('input-bg-video').value = "";
@@ -471,7 +483,7 @@
             currentEditingId = pageId; 
             const pageIdInput = document.getElementById('input-pageid');
             pageIdInput.value = pageId;
-            pageIdInput.disabled = true; // Jika sedang edit, ID URL tidak boleh diubah agar tidak merusak link lama
+            pageIdInput.disabled = true; 
             
             profileImageBase64 = ""; bgImageBase64 = "";
             document.getElementById('preview-pic').style.display = 'none'; document.getElementById('preview-bg').style.display = 'none';
@@ -494,7 +506,6 @@
         document.getElementById('btnSave').addEventListener('click', () => {
             let pageIdToSave = currentEditingId;
             
-            // Jika ini pembuatan web baru, ambil nilai dari input ID URL khusus
             if (!pageIdToSave) {
                 const rawName = document.getElementById('input-pageid').value;
                 if (!rawName.trim()) {
@@ -528,7 +539,7 @@
                 alert('Berhasil Disimpan!'); 
                 btn.innerHTML = originalHTML; 
                 currentEditingId = pageIdToSave;
-                document.getElementById('input-pageid').disabled = true; // Kunci setelah tersimpan
+                document.getElementById('input-pageid').disabled = true; 
                 switchView('dashboard');
             });
         });
