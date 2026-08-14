@@ -49,7 +49,7 @@
         .project-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.8); transition: 0.3s; }
         .project-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.2); border-color: var(--primary); }
         .project-card h3 { margin: 0 0 5px; color: var(--primary); font-size: 20px; }
-        .project-card p { margin: 0 0 20px; font-size: 13px; color: var(--text-muted); }
+        .project-card p { margin: 0 0 20px; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
         .action-btns { display: flex; gap: 10px; }
         
         .editor-container, .profile-container { background: var(--card-bg); border-radius: 24px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); }
@@ -63,11 +63,20 @@
         .alert-box { background: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #ffeeba; }
 
         /* BUTTONS */
-        .btn { padding: 12px 20px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 14px; transition: 0.3s; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; }
+        .btn { padding: 12px 15px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 13px; transition: 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; width: 100%; font-size: 14px; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(144, 12, 63, 0.4); }
+        
         .btn-edit { background: #e0f2fe; color: #0284c7; flex: 1; }
+        .btn-edit:hover { background: #bae6fd; }
+        
+        /* Tombol Copy Link */
+        .btn-copy { background: #eef2ff; color: #4f46e5; flex: 1; }
+        .btn-copy:hover { background: #e0e7ff; }
+
         .btn-danger { background: #fee2e2; color: #ef4444; }
+        .btn-danger:hover { background: #fecaca; }
+        
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; width: 100%; padding: 16px; font-size: 16px; margin-top: 20px; }
         .btn-back { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(5px); margin-bottom: 20px; }
 
@@ -89,6 +98,8 @@
             .nav-menu { display: flex; gap: 10px; padding: 0; }
             .nav-menu li span { display: none; }
             .grid-2 { grid-template-columns: 1fr; }
+            .action-btns { flex-wrap: wrap; }
+            .btn-edit, .btn-copy { min-width: 45%; }
         }
     </style>
 </head>
@@ -130,7 +141,7 @@
                         <h1 style="margin: 0;">Selamat Datang! 👋</h1>
                         <p style="margin: 5px 0 0; opacity: 0.8;">Kelola semua halaman Linktree Anda di sini.</p>
                     </div>
-                    <button class="btn btn-primary" onclick="createNewProject()">➕ Buat Web Link</button>
+                    <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="createNewProject()">➕ Buat Web Link</button>
                 </div>
                 <div class="grid-projects" id="projects-container"></div>
             </div>
@@ -234,18 +245,18 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
         const dbPagesRef = ref(db, 'pages');
-        const dbAdminRef = ref(db, 'admin_profile'); // Database khusus profil admin
+        const dbAdminRef = ref(db, 'admin_profile');
 
         let profileImageBase64 = ""; let bgImageBase64 = ""; let currentEditingId = null;
-        let adminPicBase64 = ""; // Untuk foto profil akun admin
+        let adminPicBase64 = ""; 
 
-        // --- SISTEM AUTENTIKASI UTAMA ---
+        // --- SISTEM AUTENTIKASI ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('app-layout').style.display = 'flex';
                 loadDashboardData();
-                loadAdminProfileData(user); // Muat data profil saat masuk
+                loadAdminProfileData(user);
             } else {
                 document.getElementById('login-section').style.display = 'block';
                 document.getElementById('app-layout').style.display = 'none';
@@ -264,10 +275,7 @@
         window.switchView = (viewName) => {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-menu li').forEach(li => li.classList.remove('active'));
-            
             document.getElementById('view-' + viewName).classList.add('active');
-            
-            // Set navigasi aktif di sidebar
             if(viewName === 'dashboard' || viewName === 'profile') {
                 document.getElementById('nav-' + viewName).classList.add('active');
             }
@@ -283,12 +291,20 @@
                     for (let pageId in pages) {
                         const pageData = pages[pageId];
                         const linkCount = pageData.links ? pageData.links.length : 0;
+                        
+                        // Pembuatan URL Publik Dinamis untuk disalin
+                        let currentUrl = window.location.href;
+                        // Hapus "admin.html" dari URL jika ada, agar kembali ke folder root (tempat index.html berada)
+                        let baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/')) + '/';
+                        let publicLink = baseUrl + "?u=" + pageId;
+
                         container.innerHTML += `
                             <div class="project-card">
                                 <h3>${pageData.nama || 'Tanpa Judul'}</h3>
-                                <p>ID Link: <strong>/?u=${pageId}</strong> <br> ${linkCount} Tautan Aktif</p>
+                                <p style="word-break: break-all;">Tautan Publik:<br> <strong style="color: var(--primary);">${publicLink}</strong><br> ${linkCount} Tautan Aktif</p>
                                 <div class="action-btns">
-                                    <button class="btn btn-edit" onclick="openEditor('${pageId}')">✏️ Edit Web</button>
+                                    <button class="btn btn-edit" onclick="openEditor('${pageId}')">✏️ Edit</button>
+                                    <button class="btn btn-copy" onclick="copyLink('${publicLink}', this)">🔗 Salin</button>
                                     <button class="btn btn-danger" onclick="deleteProject('${pageId}')">🗑️</button>
                                 </div>
                             </div>
@@ -299,6 +315,24 @@
                 }
             });
         }
+        
+        // --- FITUR SALIN LINK ---
+        window.copyLink = (url, btnElement) => {
+            navigator.clipboard.writeText(url).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "✅ Tersalin!";
+                btnElement.style.background = "#d1fae5";
+                btnElement.style.color = "#059669";
+                
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.background = "#eef2ff";
+                    btnElement.style.color = "#4f46e5";
+                }, 2000);
+            }).catch(err => {
+                alert("Gagal menyalin link. Harap salin secara manual.");
+            });
+        };
 
         window.createNewProject = () => {
             const rawName = prompt("Masukkan akhiran URL unik untuk Web Link ini\n(Contoh: warmindo-tupar, portofolio):");
@@ -364,7 +398,7 @@
         }
         setupFileReader('input-pic-file', 'preview-pic', (b64) => { profileImageBase64 = b64; });
         setupFileReader('input-bg-file', 'preview-bg', (b64) => { bgImageBase64 = b64; });
-        setupFileReader('admin-pic-input', 'admin-pic-preview', (b64) => { adminPicBase64 = b64; }); // Untuk Foto Profil Akun
+        setupFileReader('admin-pic-input', 'admin-pic-preview', (b64) => { adminPicBase64 = b64; }); 
 
         window.createLinkBox = (title = "", url = "", iconBase64 = "") => {
             const container = document.getElementById('links-container'); const box = document.createElement('div'); box.className = 'link-item-card';
@@ -383,19 +417,14 @@
             container.appendChild(box);
         };
 
-        // --- SISTEM PENGATURAN PROFIL ADMIN (AUTENTIKASI & KEAMANAN) ---
+        // --- SISTEM PENGATURAN PROFIL ADMIN ---
         function loadAdminProfileData(user) {
-            document.getElementById('admin-new-email').value = user.email; // Tarik email asli dari Auth
-            
-            // Tarik Nama dan Foto dari Realtime Database (karena Auth tidak menyimpan nama custom secara otomatis di sini)
+            document.getElementById('admin-new-email').value = user.email; 
             onValue(dbAdminRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
                     document.getElementById('admin-name').value = data.nama || '';
-                    if(data.foto) {
-                        adminPicBase64 = data.foto;
-                        document.getElementById('admin-pic-preview').src = data.foto;
-                    }
+                    if(data.foto) { adminPicBase64 = data.foto; document.getElementById('admin-pic-preview').src = data.foto; }
                 }
             }, { onlyOnce: true });
         }
@@ -411,10 +440,8 @@
             btn.innerText = "⏳ Memproses Keamanan...";
 
             try {
-                // 1. Simpan Data Profil (Nama & Foto) ke Realtime Database tanpa perlu sandi
                 await set(dbAdminRef, { nama: adminName, foto: adminPicBase64 });
 
-                // 2. Jika user mencoba merubah Email ATAU Sandi, maka wajib RE-AUTENTIKASI
                 if (newEmail !== user.email || newPassword !== "") {
                     if (!oldPassword) {
                         alert("Harap masukkan Kata Sandi Saat Ini (Lama) untuk otorisasi keamanan!");
@@ -422,19 +449,16 @@
                         return;
                     }
 
-                    // Kunci Kredensial untuk memastikan ini pemilik asli
                     const credential = EmailAuthProvider.credential(user.email, oldPassword);
                     await reauthenticateWithCredential(user, credential);
 
-                    // 3. Proses Ganti Sandi Baru (Jika diisi)
                     if (newPassword !== "") {
                         if(newPassword.length < 6) throw new Error("Sandi baru minimal 6 karakter.");
                         await updatePassword(user, newPassword);
                         alert("✅ Kata Sandi berhasil diperbarui!");
-                        document.getElementById('admin-new-password').value = ""; // Bersihkan form
+                        document.getElementById('admin-new-password').value = ""; 
                     }
 
-                    // 4. Proses Ganti Email (Jika berubah)
                     if (newEmail !== user.email) {
                         await verifyBeforeUpdateEmail(user, newEmail);
                         alert(`📧 Permintaan ubah email dikirim!\n\nKami telah mengirimkan Link Konfirmasi ke email baru Anda (${newEmail}). Silakan periksa kotak masuk/spam email tersebut dan klik linknya agar email ini resmi terganti.`);
@@ -443,7 +467,7 @@
                     alert("✅ Profil (Nama & Foto) berhasil disimpan!");
                 }
 
-                document.getElementById('admin-old-password').value = ""; // Bersihkan sandi lama demi keamanan
+                document.getElementById('admin-old-password').value = ""; 
                 btn.innerText = "🔒 Simpan Pembaruan Akun";
 
             } catch (error) {
@@ -456,7 +480,6 @@
                 btn.innerText = "🔒 Simpan Pembaruan Akun";
             }
         });
-
     </script>
 </body>
 </html>
